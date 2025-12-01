@@ -14,13 +14,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 // 2️⃣ EF Core + MySQL
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-{
-    options.UseMySql(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        new MySqlServerVersion(new Version(8, 0, 30))
-    );
-});
+    options.UseNpgsql(connectionString)
+);
 
 // 3️⃣ Redis
 var redisConnection = builder.Configuration["Redis:Connection"] ?? "localhost:6379";
